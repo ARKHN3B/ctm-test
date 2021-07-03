@@ -5,17 +5,17 @@ const apiResponse              = require("../helpers/apiResponse");
 const auth                     = require("../middlewares/jwt");
 const http                     = require("http");
 const axios                    = require("axios");
-var mongoose                   = require("mongoose");
-mongoose.set("useFindAndModify", false);
 
 
-// Good Schema
-function GoodData(data) {
-	this.id          = data._id;
-	this.title       = data.title;
-	this.description = data.description;
-	this.isbn        = data.isbn;
-	this.createdAt   = data.createdAt;
+exports.goodList = async function (req, res) {
+	try {
+		const all = await Good.find({});
+		return apiResponse.successResponseWithData(res, "Operation success", all);
+	}
+	catch (err) {
+		//throw error in json response with status 500.
+		return apiResponse.ErrorResponse(res, err);
+	}
 }
 
 /**
@@ -51,11 +51,15 @@ exports.goodStore =
 				promises.push(promise);
 			}
 
-			await Promise.allSettled(promises);
+			const allSettled = await Promise.allSettled(promises); // TODO manage rejected
 
-			// const all = await Good.find({}); console.debug({all});
+			// allSettled.forEach(({status}) => {
+			// 	// if (status === "rejected")
+			// })
 
-			return apiResponse.successResponseWithData(res, "Operation success", parsedData);
+			console.debug({allSettled});
+
+			return apiResponse.successResponseWithData(res, "Operation success");
 		}
 		catch (err) {
 			//throw error in json response with status 500.

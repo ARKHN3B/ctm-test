@@ -3,6 +3,7 @@ const GoodController = require("../controllers/GoodController");
 
 var router = express.Router();
 
-router.post("/", GoodController.goodStore);
+router.get("/all", GoodController.goodList);
+router.post("/update", GoodController.goodStore);
 
 module.exports = router;
