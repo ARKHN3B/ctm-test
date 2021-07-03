@@ -1,10 +1,5 @@
 const Good                     = require("../models/GoodModel");
-const {body, validationResult} = require("express-validator");
-const {sanitizeBody}           = require("express-validator");
 const apiResponse              = require("../helpers/apiResponse");
-const auth                     = require("../middlewares/jwt");
-const http                     = require("http");
-const axios                    = require("axios");
 const {updateGoods}            = require("../helpers/goodActions");
 
 
@@ -27,7 +22,10 @@ exports.goodList = async function (req, res) {
 exports.goodStore =
 	async function (req, res) {
 		try {
-			const updatedGood = await updateGoods();
+			const updatedGood = await updateGoods().catch(err => {
+				//throw error in json response with status 500.
+				return apiResponse.ErrorResponse(res, err.message);
+			});
 			console.debug({updatedGood});
 			return apiResponse.successResponseWithData(res, "Operation success");
 		}
