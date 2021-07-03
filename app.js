@@ -10,8 +10,10 @@ var cors          = require("cors");
 const MongoClient = require("mongodb").MongoClient;
 
 // DB connection
-var MONGODB_URL = process.env.MONGODB_URL;
-var mongoose = require("mongoose");
+var MONGODB_URL     = process.env.MONGODB_URL;
+var mongoose        = require("mongoose");
+const cron          = require("node-cron");
+const {updateGoods} = require("./helpers/goodActions");
 mongoose.connect(MONGODB_URL, {
 	ssl               : true,
 	useNewUrlParser   : true,
@@ -50,6 +52,11 @@ app.use(cors());
 //Route Prefixes
 app.use("/", indexRouter);
 app.use("/api/", apiRouter);
+
+// Schedule tasks to be run on the server.
+cron.schedule('* * * * *', function() {
+	updateGoods(); // TODO logs
+});
 
 // throw 404 if URL not found
 app.all("*", function (req, res) {
