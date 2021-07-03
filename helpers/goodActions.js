@@ -2,7 +2,7 @@ const axios = require("axios");
 const Good  = require("../models/GoodModel");
 
 module.exports.updateGoods = async function () {
-	const day    = new Date().getDay() + 1;
+	const day    = new Date().getDay() + 1; // Current day, start from Sunday
 	const {data} = await axios.get(`https://test-leadev.osc-fr1.scalingo.io/citimaImmo?day=${day}`, {headers: {"api-key": "xFrMPL9rviwifWrVvklK2Iui6jKyX2f9"}});
 	console.log(data);
 
